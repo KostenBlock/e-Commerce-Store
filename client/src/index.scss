@@ -1,0 +1,41 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a, a:hover{
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.shopping-cart-wrap .price {
+  color: #007bff;
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 5px;
+  display: block;
+}
+
+.media img {
+  margin-right: 1rem;
+}
+.img-sm {
+  width: 90px;
+  max-height: 75px;
+  object-fit: cover;
+}
+
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}

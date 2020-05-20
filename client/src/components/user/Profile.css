@@ -1,0 +1,10 @@
+.img{
+    text-align:center;
+}
+.details{
+    border-left:3px solid #ded4da;
+}
+.details p{
+    font-size:15px;
+    font-weight:bold;
+}
