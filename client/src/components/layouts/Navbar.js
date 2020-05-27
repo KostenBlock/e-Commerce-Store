@@ -25,12 +25,19 @@ const Navbar = ({ icon, title}) => {
         clearOrders();
     };
 
+    const adminLinks = (
+        <Fragment>
+            <NavDropdown.Item href="/adminpanel">Админ-панель</NavDropdown.Item>
+            <NavDropdown.Item href="/additem">Добавить товар</NavDropdown.Item>
+        </Fragment>
+    )
+
     const authLinks = (
         <Fragment>
             <NavDropdown.Item href="/profile">Профиль</NavDropdown.Item>
             <NavDropdown.Item href="/orders">Мои заказы</NavDropdown.Item>
             <NavDropdown.Item href="/settings">Настройки</NavDropdown.Item>
-            {user && user.role === "admin" && <NavDropdown.Item href="/adminpanel">Админ-панель</NavDropdown.Item>}
+            {user && user.role === "admin" && adminLinks}
             <NavDropdown.Divider />
             <NavDropdown.Item href="/login" onClick={onLogout}>Выйти</NavDropdown.Item>
         </Fragment>

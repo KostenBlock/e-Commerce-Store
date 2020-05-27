@@ -78,8 +78,8 @@ const Register = props => {
         <Fragment>
             {!loading
                 ? <div className="form-container">
-                    <Alerts/>
                     <h1 className="text-center">Форма регистрации</h1>
+                    <Alerts/>
                     <form onSubmit={onSubmit}>
                         <label>
                             <p className="label-txt">Введите имя</p>

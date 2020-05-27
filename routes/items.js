@@ -1,8 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const multer = require("multer");
+const auth = require('../middleware/auth');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'productImages')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' +file.originalname )
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+}).single('file');
 
 const Item = require('../models/Item');
+const Categories = require('../models/Categories');
 
 // @route   GET api/items
 // @desc    Get all items
@@ -44,41 +72,38 @@ router.get('/product/:id', async (req, res) => {
 // @route   POST api/items
 // @desc    Add new item
 // @access  Private
-router.post('/', [
-    check('name', 'Name is required').not().isEmpty(),
-    check('category', 'Category is required').not().isEmpty(),
-    check('urlImg', 'Url of Image is required').not().isEmpty(),
-    check('price', 'Price is required').not().isEmpty(),
-], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array()});
-    }
+router.post('/', auth, (req, res) => {
+    upload(req, res, async function (err) {
+        const {name, category, category_eng, description, price} = req.body;
 
-    const {name, category, urlImg, price, description} = req.body;
-
-    try {
-        const newItem = new Item({
-            name: name,
-            category: category,
-            urlImg: urlImg,
-            price: price,
-            description: description
-        });
-
-        const item = await newItem.save();
-
-        res.json(item);
-    } catch (err) {
-        console.error(err.msg);
-        res.status(500).send('Server Error');
-    }
+        if (!name || !category || !category_eng || !description || !price) {
+            return res.status(404).json({msg: "Не все поля заполнены"});
+        }
+        if (!req.file) {
+            return res.status(404).json({msg: "Изображение не выбрано"});
+        }
+        try {
+            const newItem = new Item({
+                name: name,
+                category: category,
+                category_eng: category_eng,
+                img: req.file.filename,
+                description: description,
+                price: price,
+            });
+            const item = await newItem.save();
+            res.json(item);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Ошибка сервера');
+        }
+    });
 });
 
 // @route   PUT api/items/:id
 // @desc    Update contact
 // @access  Private
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     const { name, category, urlImg, price } = req.body;
 
     // build a contact object
@@ -110,7 +135,7 @@ router.put('/:id', async (req, res) => {
 // @route   PUT api/items/:id
 // @desc    Delete item
 // @access  Private
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try{
         let item = await Item.findById(req.params.id);
         if (!item) res.status(404).json('Item not found');
@@ -120,6 +145,37 @@ router.delete('/:id', async (req, res) => {
     } catch (err) {
         console.error(err.msg);
         res.status(500).send('Server Error');
+    }
+});
+
+// @route   PUT api/items/categories
+// @desc    get all categories
+// @access  Private
+router.get('/categories', auth, async (req, res) => {
+    try{
+        const categories = await Categories.find();
+        res.json(categories);
+    } catch (err) {
+        console.error(err.msg);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
+// @route   PUT api/items/categories
+// @desc    post category
+// @access  Private
+router.post('/categories', auth, async (req, res) => {
+    try {
+        const { name } = req.body;
+        if (!name) return res.status(404).json({msg: "Название категории не введено"});
+        const newCategory = new Categories({
+            name: name
+        });
+        const category = await newCategory.save();
+        res.json(category);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Ошибка сервера');
     }
 });
 

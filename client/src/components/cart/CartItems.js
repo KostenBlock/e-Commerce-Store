@@ -55,7 +55,7 @@ const CartItems = ({history}) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-auto align-items-center">
+                        <div className="col-md-auto align-items-center mb-5">
                             <div className="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Сумма заказа</div>
                             <div className="p-1">
                                 <p className="font-italic mb-4">Доставка и дополнительные расходы рассчитываются на основе значения, которые вы ввели.</p>

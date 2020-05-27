@@ -13,11 +13,15 @@ app.get('/', (req, res) => {
     res.json({ msg: "Welcome to the OnlineStore..."});
 });
 
+app.use('/uploads', express.static('uploads'));
+app.use('/productImages', express.static('productImages'));
+
 //Define routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/items', require('./routes/items'));
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/user_img', require('./routes/userImg'));
 
 const PORT = process.env.PORT || 5000;
 

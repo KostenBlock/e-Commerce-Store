@@ -9,7 +9,11 @@ const ItemSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    urlImg: {
+    category_eng: {
+        type: String,
+        required: true
+    },
+    img: {
         type: String,
         required: true
     },
@@ -24,7 +28,7 @@ const ItemSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
-    },
+    }
 })
 
 module.exports = mongoose.model('item', ItemSchema);

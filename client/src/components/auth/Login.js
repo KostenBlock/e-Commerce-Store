@@ -59,8 +59,8 @@ const Login = props => {
         <Fragment>
             {!loading
                 ? <div className="form-container">
-                    <Alerts/>
                     <h1 className="text-center">Авторизация</h1>
+                    <Alerts/>
                     <form onSubmit={onSubmit}>
                         <label>
                             <p className="label-txt">Введите Email-адрес</p>

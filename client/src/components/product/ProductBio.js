@@ -29,7 +29,7 @@ const ProductBio = () => {
                     <div className="row">
                         <div className="col-md-7">
                             <h3>{product.name}</h3>
-                            <img className="img-fluid" src={product.urlImg} alt={product.name} style={{border:"1px solid grey", borderRadius:"5px"}}/>
+                            <img className="img-fluid" src={`../../../../productImages/${product.img}`} alt={product.name} style={{border:"1px solid grey", borderRadius:"5px"}}/>
                         </div>
                         <div className="col-md-5">
                             <h3 className="my-auto">Описание товара</h3>

@@ -1,6 +1,10 @@
 import {
-    AUTH_ERROR, CHANGE_BIO, CHANGE_ERROR,
+    AUTH_ERROR,
+    AVATAR_ERROR, CHANGE_AVATAR,
+    CHANGE_BIO,
+    CHANGE_ERROR,
     CLEAR_ERRORS,
+    GET_AVATAR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT,
@@ -28,10 +32,28 @@ export default (state, action) => {
                 isAuthenticated: true,
                 loading: false
             };
+        case GET_AVATAR:
+            return {
+                ...state,
+                avatar: action.payload.imgName,
+                loading: false
+            }
+        case CHANGE_AVATAR:
+            return {
+                ...state,
+                avatar: action.payload.imgName,
+                loading: false
+            };
         case CHANGE_BIO:
             return {
                 ...state,
                 ...action.payload,
+                loading: false
+            };
+        case AVATAR_ERROR:
+            return {
+                ...state,
+                error: action.payload,
                 loading: false
             };
         case REGISTER_FAIL:

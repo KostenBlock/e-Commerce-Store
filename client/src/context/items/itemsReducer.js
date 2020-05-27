@@ -1,6 +1,6 @@
 import {
     CLEAR_FILTER,
-    FILTER_ITEMS,
+    FILTER_ITEMS, GET_CATEGORIES,
     GET_ITEMS,
     GET_ITEMS_BY_CATEGORY,
     GET_PRODUCT,
@@ -25,6 +25,12 @@ export default (state, action) => {
             return {
                 ...state,
                 product: action.payload,
+                loading: false
+            };
+        case GET_CATEGORIES:
+            return {
+                ...state,
+                categories: action.payload,
                 loading: false
             };
         case FILTER_ITEMS:

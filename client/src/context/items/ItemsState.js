@@ -3,8 +3,11 @@ import ItemsContext from "./itemsContext";
 import itemsReducer from "./itemsReducer";
 import axios from "axios";
 import {
+    ADD_ITEM,
+    CATEGORIES_ERROR,
     CLEAR_FILTER,
     FILTER_ITEMS,
+    GET_CATEGORIES,
     GET_ITEMS,
     GET_ITEMS_BY_CATEGORY,
     GET_PRODUCT,
@@ -15,6 +18,7 @@ const ItemsState = props => {
     const initialState = {
         items: null,
         itemsByCategory: null,
+        categories: null,
         current: null,
         filtered: null,
         error: null,
@@ -30,7 +34,7 @@ const ItemsState = props => {
             dispatch({
                 type: GET_ITEMS,
                 payload: response.data
-            })
+            });
         } catch (err) {
             dispatch({
                 type: ITEM_ERROR ,
@@ -46,7 +50,7 @@ const ItemsState = props => {
             dispatch({
                 type: GET_ITEMS_BY_CATEGORY,
                 payload: response.data
-            })
+            });
         } catch (err) {
             dispatch({
                 type: ITEM_ERROR ,
@@ -67,7 +71,42 @@ const ItemsState = props => {
             dispatch({
                 type: ITEM_ERROR,
                 payload: err.response.data
-            })
+            });
+        }
+    };
+
+    const getCategories = async () => {
+        try {
+            const response = await axios.get('/api/items/categories');
+            dispatch({
+                type: GET_CATEGORIES,
+                payload: response.data
+            });
+        } catch (err) {
+            dispatch({
+                type: CATEGORIES_ERROR,
+                payload: err.response.data
+            });
+        }
+    };
+
+    const addItem = async formData => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        try {
+            const response = await axios.post('/api/items', formData, config);
+            dispatch({
+                type: ADD_ITEM,
+                payload: response.data
+            });
+        } catch (err) {
+            dispatch({
+                type: ITEM_ERROR,
+                payload: err.response.data
+            });
         }
     };
 
@@ -90,6 +129,7 @@ const ItemsState = props => {
         <ItemsContext.Provider value={{
             items: state.items,
             itemsByCategory: state.itemsByCategory,
+            categories: state.categories,
             current: state.current,
             filtered: state.filtered,
             error: state.error,
@@ -97,6 +137,8 @@ const ItemsState = props => {
             getItems,
             getItemsByCategory,
             getProduct,
+            getCategories,
+            addItem,
             filterItems,
             clearFilter
         }}>

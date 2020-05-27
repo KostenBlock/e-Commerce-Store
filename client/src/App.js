@@ -21,6 +21,7 @@ import AdminRoute from "./components/routing/AdminRoute";
 import AdminPanel from "./pages/AdminPanel";
 import AdminState from "./context/admin/AdminState";
 import Checkout from "./components/checkout/Checkout";
+import AddItem from "./components/addItem/AddItem";
 
 if(localStorage.token) {
     setAuthToken(localStorage.token);
@@ -50,6 +51,7 @@ function App() {
                                               <PrivateRoute path="/orders" component={Orders}/>
                                               <PrivateRoute path="/settings" component={Settings}/>
                                               <AdminRoute path="/adminpanel" component={AdminPanel}/>
+                                              <AdminRoute path="/additem" component={AddItem}/>
                                           </Switch>
                                       </div>
                                   </Fragment>

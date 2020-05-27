@@ -13,7 +13,7 @@ const Items = () => {
         // eslint-disable-next-line
     }, [])
 
-    if (items !== null && items.length === null && !loading) {
+    if (items !== null && items.length === 0 && !loading) {
         return <h4 className="text-center">Товаров нету...</h4>
     }
 

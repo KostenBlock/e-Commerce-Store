@@ -13,7 +13,9 @@ import {
     LOGIN_SUCCESS,
     LOGOUT,
     CHANGE_BIO,
-    CHANGE_ERROR
+    CHANGE_ERROR,
+    GET_AVATAR,
+    AVATAR_ERROR, CHANGE_AVATAR
 } from '../types';
 import setAuthToken from "../../utils/setAuthToken";
 
@@ -22,6 +24,7 @@ const AuthState = props => {
         token: localStorage.getItem('token'),
         isAuthenticated: null,
         role: null,
+        avatar: null,
         loading: true,
         user: null,
         error: null
@@ -29,7 +32,7 @@ const AuthState = props => {
 
     const [state, dispatch] = useReducer(authReducer, initialState);
 
-    // Load User
+    // Загрузка пользователя
     const loadUser = async () => {
         if(localStorage.token) {
             setAuthToken(localStorage.token);
@@ -41,15 +44,15 @@ const AuthState = props => {
             dispatch({
                 type: USER_LOADED,
                 payload: response.data
-            })
+            });
         } catch (err) {
             dispatch({
                 type: AUTH_ERROR
-            })
+            });
         }
     };
 
-    // Register User
+    // Регистрация
     const register = async formData => {
         const config = {
             headers: {
@@ -74,7 +77,7 @@ const AuthState = props => {
         }
     };
 
-    //Login
+    // Вход
     const login = async formData => {
         const config = {
             headers: {
@@ -95,10 +98,11 @@ const AuthState = props => {
             dispatch({
                 type: LOGIN_FAIL,
                 payload: err.response.data.msg
-            })
+            });
         }
     };
 
+    // Изменение данных пользователя
     const changeBIO = async formData => {
         const config = {
             headers: {
@@ -123,10 +127,47 @@ const AuthState = props => {
         }
     }
 
-    // Logout
+    // Загрузка изображения пользователя
+    const getAvatar = async () => {
+        try {
+            const response = await axios.get('/api/user_img');
+            dispatch({
+                type: GET_AVATAR,
+                payload: response.data
+            });
+        } catch (err) {
+            dispatch({
+                type: AVATAR_ERROR,
+                payload: err.response.data.msg
+            });
+        }
+    }
+
+    // Изменение изображения пользователя
+    const changeAvatar = async formData => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        try {
+            const response = await axios.post('/api/user_img', formData, config);
+            dispatch({
+                type: CHANGE_AVATAR,
+                payload: response.data
+            });
+        } catch (err) {
+            dispatch({
+                type: CHANGE_ERROR,
+                payload: err.response.data.msg
+            });
+        }
+    };
+
+    // Выход
     const logout = () => dispatch({ type: LOGOUT });
 
-    // Clear Errors
+    // Очистка ошибок
     const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
     return (
@@ -134,6 +175,7 @@ const AuthState = props => {
             token: state.token,
             isAuthenticated: state.isAuthenticated,
             role: state.role,
+            avatar: state.avatar,
             loading: state.loading,
             user: state.user,
             error: state.error,
@@ -141,7 +183,9 @@ const AuthState = props => {
             login,
             loadUser,
             logout,
+            getAvatar,
             changeBIO,
+            changeAvatar,
             clearErrors
         }}>
             {props.children}

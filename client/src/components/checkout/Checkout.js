@@ -109,7 +109,7 @@ const Checkout = ({history}) => {
         } else if (!numberValidation.isValid) {
             setAlert("Данная карта невалидна", "danger");
         }else if (!expDateValidation.isValid) {
-            setAlert("Карта просрочена или вы ввели не верную дадут", "danger");
+            setAlert("Карта просрочена или вы ввели не верную дату", "danger");
         }else if (!cvvValidation.isValid) {
             setAlert("Введите 3 цифры кода на обороте вашей карты", "danger");
         }else if (!agreed) {
