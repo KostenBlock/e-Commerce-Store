@@ -1,2 +1,2 @@
 # e-Commerce-Store
-DEMO VERSION : https://serene-shelf-68105.herokuapp.com/
+DEMO VERSION : https://dry-oasis-32624.herokuapp.com/
