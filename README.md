@@ -1,2 +1,2 @@
 # e-Commerce-Store
-DEMO VERSION : https://dry-oasis-32624.herokuapp.com/
+DEMO Version : https://morning-island-36604.herokuapp.com/
