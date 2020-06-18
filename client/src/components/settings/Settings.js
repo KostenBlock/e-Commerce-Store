@@ -3,6 +3,7 @@ import AuthContext from "../../context/auth/authContext";
 import Loader from "../layouts/Loader";
 import AlertContext from "../../context/alert/alertContext";
 import Alerts from "../layouts/Alerts";
+import {flb} from "../../utils/someFunctions";
 
 const Settings = () => {
     const authContext = useContext(AuthContext);
@@ -14,10 +15,10 @@ const Settings = () => {
     useEffect(() => {
         if (user !== null) {
             setData({
-                name: user.name,
-                surname: user.surname,
-                country: user.country,
-                city: user.city,
+                name: flb(user.name),
+                surname: flb(user.surname),
+                country: flb(user.country),
+                city: flb(user.city),
                 zipcode: user.zipcode,
                 address: user.address
             });

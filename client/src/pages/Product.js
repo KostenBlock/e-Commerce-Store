@@ -14,7 +14,7 @@ const Product = props => {
 
     return(
         <Fragment>
-            <ProductBio id={props.match.params.id}/>
+            <ProductBio/>
         </Fragment>
     )
 };

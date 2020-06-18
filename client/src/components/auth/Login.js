@@ -1,7 +1,7 @@
 import React, {Fragment, useContext, useEffect, useState} from "react";
 import Loader from "../layouts/Loader";
 import AuthContext from "../../context/auth/authContext";
-import './auth.scss';
+import '../../sass/auth.scss';
 import AlertContext from "../../context/alert/alertContext";
 import Alerts from "../layouts/Alerts";
 import {NavLink} from "react-router-dom";
@@ -49,7 +49,7 @@ const Login = props => {
             clearErrors();
         } else {
             login({
-                email,
+                email: email.toLowerCase(),
                 password
             });
         }

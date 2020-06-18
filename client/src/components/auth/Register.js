@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useEffect, useState} from "react";
-import './auth.scss';
+import '../../sass/auth.scss';
 import AuthContext from "../../context/auth/authContext";
 import Loader from "../layouts/Loader";
 import AlertContext from "../../context/alert/alertContext";
@@ -50,14 +50,16 @@ const Register = props => {
 
     const onSubmit = event => {
         event.preventDefault();
-
         if (name === ''|| surname === '' || email === '' || country === '' || city === '' || zipcode === '' ||  address === '' || password === '' || password2 === '') {
             setAlert("Заполните все поля", "danger");
             clearErrors();
         } else if (emailValid === null) {
             setAlert("Введите корректный Email-адрес", "danger");
             clearErrors();
-        } else if (password !== password2) {
+        } else if (password.length < 6 && password2.length < 6) {
+            setAlert("Минимальная длина пароля 6 символов", "danger");
+            clearErrors();
+        }else if (password !== password2) {
             setAlert("Пароли не совпадают", "danger");
             clearErrors();
         } else {
@@ -132,14 +134,14 @@ const Register = props => {
                         </label>
                         <label>
                             <p className="label-txt">Введите свой пароль</p>
-                            <input className="input" type="password" name="password" value={password} onChange={onChange}/>
+                            <input className="input" type="password" name="password" placeholder={'Минимум 6 символов'} value={password} onChange={onChange}/>
                             <div className="line-box">
                                 <div className="line"/>
                             </div>
                         </label>
                         <label>
                             <p className="label-txt">Повторите пароль</p>
-                            <input className="input" type="password" name="password2" value={password2} onChange={onChange}/>
+                            <input className="input" type="password" name="password2" placeholder={'Минимум 6 символов'} value={password2} onChange={onChange}/>
                             <div className="line-box">
                                 <div className="line"/>
                             </div>

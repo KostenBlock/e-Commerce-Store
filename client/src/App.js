@@ -22,6 +22,8 @@ import AdminPanel from "./pages/AdminPanel";
 import AdminState from "./context/admin/AdminState";
 import Checkout from "./components/checkout/Checkout";
 import AddItem from "./components/addItem/AddItem";
+import NotFound from "./pages/NotFound";
+import Search from "./pages/Search";
 
 if(localStorage.token) {
     setAuthToken(localStorage.token);
@@ -44,6 +46,7 @@ function App() {
                                               <Route path="/login" component={Login}/>
                                               <Route path="/register" component={Register}/>
                                               <Route path="/cart" component={Cart}/>
+                                              <Route path="/search/:query" component={Search}/>
                                               <Route path="/category/:name" component={Category}/>
                                               <Route path="/product/:id" component={Product}/>
                                               <PrivateRoute path="/checkout" component={Checkout}/>
@@ -52,6 +55,7 @@ function App() {
                                               <PrivateRoute path="/settings" component={Settings}/>
                                               <AdminRoute path="/adminpanel" component={AdminPanel}/>
                                               <AdminRoute path="/additem" component={AddItem}/>
+                                              <Route component={NotFound}/>
                                           </Switch>
                                       </div>
                                   </Fragment>

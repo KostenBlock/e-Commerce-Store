@@ -36,13 +36,13 @@ const AddItem = () => {
             ru: event.target.value.split('/')[0],
             eng: event.target.value.split('/')[1]
         });
-    }
+    };
 
     const onChangeImg = event => {
         setImage({
             img: event.target.files[0]
         });
-    }
+    };
 
     const onSubmit = event => {
         event.preventDefault();
@@ -66,7 +66,7 @@ const AddItem = () => {
         setImage({
             img: ''
         });
-    }
+    };
 
     if (categories !== null && categories.length === 0 && !loading) {
         return <h4 className="text-center">Без категорий товар не добавить(:</h4>

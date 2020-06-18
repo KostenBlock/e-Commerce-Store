@@ -36,13 +36,13 @@ router.post('/', [
         }
 
         user = new User({
-            name,
-            surname,
-            country,
-            city,
+            name: name.toLowerCase(),
+            surname: surname.toLowerCase(),
+            country: country.toLowerCase(),
+            city: city.toLowerCase(),
             address,
             zipcode,
-            email,
+            email: email.toLowerCase(),
             password
         });
 
@@ -56,7 +56,7 @@ router.post('/', [
             user: {
                 id: user.id
             }
-        }
+        };
 
         jwt.sign(payload, config.get('jwtSecret'), {
             expiresIn: 360000
@@ -90,10 +90,10 @@ router.put('/', auth, [
 
     const userFields = {};
 
-    if (name) userFields.name = name;
-    if (surname) userFields.surname = surname;
-    if (country) userFields.country = country;
-    if (city) userFields.city = city;
+    if (name) userFields.name = name.toLowerCase();
+    if (surname) userFields.surname = surname.toLowerCase();
+    if (country) userFields.country = country.toLowerCase();
+    if (city) userFields.city = city.toLowerCase();
     if (address) userFields.address = address;
     if (zipcode) userFields.zipcode = zipcode;
 

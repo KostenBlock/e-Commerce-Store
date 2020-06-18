@@ -5,11 +5,10 @@ import axios from "axios";
 import {
     ADD_ITEM,
     CATEGORIES_ERROR,
-    CLEAR_FILTER,
-    FILTER_ITEMS,
     GET_CATEGORIES,
     GET_ITEMS,
     GET_ITEMS_BY_CATEGORY,
+    GET_ITEMS_BY_SEARCH,
     GET_PRODUCT,
     ITEM_ERROR
 } from "../types";
@@ -18,9 +17,8 @@ const ItemsState = props => {
     const initialState = {
         items: null,
         itemsByCategory: null,
+        itemsBySearch: null,
         categories: null,
-        current: null,
-        filtered: null,
         error: null,
         product: null
     };
@@ -31,9 +29,13 @@ const ItemsState = props => {
     const getItems = async () => {
         try {
             const response = await axios.get('/api/items');
+            let items = [];
+            for (let i = 0; i < response.data.length; i++) {
+                response.data[i].map(d => items.push(d));
+            }
             dispatch({
                 type: GET_ITEMS,
-                payload: response.data
+                payload: items
             });
         } catch (err) {
             dispatch({
@@ -65,6 +67,22 @@ const ItemsState = props => {
             const response = await axios.get(`/api/items/product/${id}`);
             dispatch({
                 type: GET_PRODUCT,
+                payload: response.data
+            });
+        } catch (err) {
+            dispatch({
+                type: ITEM_ERROR,
+                payload: err.response.data
+            });
+        }
+    };
+
+    // Поиск по сайту
+    const search = async query => {
+        try {
+            const response = await axios.get(`/api/items/search/${query}`);
+            dispatch({
+                type: GET_ITEMS_BY_SEARCH,
                 payload: response.data
             });
         } catch (err) {
@@ -110,41 +128,24 @@ const ItemsState = props => {
         }
     };
 
-    //Поиск по товарам
-    const filterItems = text => {
-        dispatch({
-            type: FILTER_ITEMS,
-            payload: text
-        });
-    };
-
-    //Очистка поиска
-    const clearFilter = () => {
-        dispatch({
-            type: CLEAR_FILTER
-        })
-    };
-
     return (
         <ItemsContext.Provider value={{
             items: state.items,
             itemsByCategory: state.itemsByCategory,
+            itemsBySearch: state.itemsBySearch,
             categories: state.categories,
-            current: state.current,
-            filtered: state.filtered,
             error: state.error,
             product: state.product,
             getItems,
             getItemsByCategory,
             getProduct,
             getCategories,
-            addItem,
-            filterItems,
-            clearFilter
+            search,
+            addItem
         }}>
             {props.children}
         </ItemsContext.Provider>
     )
-}
+};
 
 export default ItemsState;

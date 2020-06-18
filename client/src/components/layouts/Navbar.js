@@ -1,6 +1,7 @@
-import React, {Fragment, useContext, useEffect} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import {NavLink} from "react-router-dom";
+import { createBrowserHistory } from "history";
 import CartContext from "../../context/cart/cartContext";
 import CartNavbar from "../cart/CartNavbar";
 import AuthContext from "../../context/auth/authContext";
@@ -12,7 +13,13 @@ const Navbar = ({ icon, title}) => {
     const { clearOrders } = useContext(OrdersContext);
     const authContext = useContext(AuthContext);
 
+    const [value, setValue] = useState({
+       search :''
+    });
+
     const { loadUser, isAuthenticated, user, logout } = authContext;
+
+    const customHistory = createBrowserHistory();
 
     useEffect(() => {
         getItemsFromCart();
@@ -25,12 +32,22 @@ const Navbar = ({ icon, title}) => {
         clearOrders();
     };
 
+    const onKeyPress = event => {
+        if (event.key === 'Enter') customHistory.push(`/search/query=${value.search.toLowerCase()}`);
+    };
+
+    const onChange = event => {
+        setValue({
+            search: event.target.value
+        });
+    };
+
     const adminLinks = (
         <Fragment>
             <NavDropdown.Item href="/adminpanel">Админ-панель</NavDropdown.Item>
             <NavDropdown.Item href="/additem">Добавить товар</NavDropdown.Item>
         </Fragment>
-    )
+    );
 
     const authLinks = (
         <Fragment>
@@ -54,6 +71,7 @@ const Navbar = ({ icon, title}) => {
         <nav className="navbar navbar-light" style={{backgroundColor: "rgba(47,36,47,0.38)"}}>
             <NavLink to="/" className="navbar-brand"><i className={icon}/> {title}</NavLink>
             <form className="form-inline pull-xs-right">
+                <input style={{height:"35px", borderRadius: "5px"}} value={value.search} onChange={onChange} onKeyPress={onKeyPress} placeholder="Поиск..."/>
                 <CartNavbar/>
                 <NavDropdown title={<i className="fas fa-user" style={{fontSize: "24px"}}/>} id="basic-nav-dropdown">
                     {isAuthenticated ? authLinks : guestLinks}

@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const cloudinary = require('cloudinary');
 const auth = require('../middleware/auth');
 
 const UserImage = require("../models/UserImage");
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' +file.originalname )
-    }
+cloudinary.config({
+    cloud_name: "blockservices",
+    api_key: 965751971587379,
+    api_secret:"EpW5WYaHj-ReWRFAOuucatjBA1M"
 });
+
+const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -43,21 +43,36 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.post('/', auth, function(req, res) {
-    upload(req, res, async function (err) {
-        try {
-            // Удаляем предыдущию запись, чтобы не засорять коллекцию БД
-            const img = await UserImage.findOneAndDelete({user: req.user.id});
-            console.log(img)
-            const newUserImage = new UserImage ({
-                imgName: req.file.filename,
-                user: req.user.id
-            })
-            const userImage = await newUserImage.save();
-            res.json(userImage);
-        } catch (err) {
-            console.error(err.msg);
-            res.status(500).send('Ошибка сервера');
+    upload(req, res, function (err) {
+        if (err) {
+            return res.status(404).json({msg: "Размер изображения слишком больщой, максимальный размер 5мб."});
         }
+
+        if (!req.file) {
+            return res.status(404).json({msg: "Изображение не выбрано"});
+        }
+
+        cloudinary.v2.uploader.upload(req.file.path).then(async function(data){
+            const img = await UserImage.findOneAndDelete({user: req.user.id});
+            console.log(img);
+
+            const newUserImage = new UserImage ({
+                imgName: data.url,
+                user: req.user.id
+            });
+
+            // сохраняем данные
+            await newUserImage.save((error)=>{
+                if(error){
+                    console.log('error',error)
+                }
+                else{
+                    res.json(newUserImage);
+                }
+            });
+        }).catch(function(error){
+            console.log(error);
+        });
     })
 });
 

@@ -1,5 +1,6 @@
 import React, {useContext} from "react";
 import CartContext from "../../context/cart/cartContext";
+import {capitalize, flb} from "../../utils/someFunctions";
 
 const CartItem = ({item}) => {
     const cartContext = useContext(CartContext);
@@ -21,12 +22,12 @@ const CartItem = ({item}) => {
             <th scope="row">
                 <div className="p-2">
                     <img
-                        src={item.urlImg}
+                        src={item.img}
                         alt={item.name} width="70" className="img-fluid rounded shadow-sm"/>
                     <div className="ml-3 d-inline-block align-middle">
-                        <h5 className="mb-0"><a href="#!" className="text-dark d-inline-block">{item.name}</a>
+                        <h5 className="mb-0"><a href="#!" className="text-dark d-inline-block">{capitalize(item.name)}</a>
                         </h5>
-                        <span className="text-muted font-weight-normal font-italic">Категория: {item.category}</span>
+                        <span className="text-muted font-weight-normal font-italic">Категория: {flb(item.category)}</span>
                     </div>
                 </div>
             </th>

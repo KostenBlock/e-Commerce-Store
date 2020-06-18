@@ -3,7 +3,7 @@ import Items from "../components/items/Items";
 
 const Home = () => {
     return (
-        <div className="row mt-5">
+        <div className="mt-5">
             <Items/>
         </div>
     )

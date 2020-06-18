@@ -1,8 +1,7 @@
 import {
-    CLEAR_FILTER,
-    FILTER_ITEMS, GET_CATEGORIES,
+    GET_CATEGORIES,
     GET_ITEMS,
-    GET_ITEMS_BY_CATEGORY,
+    GET_ITEMS_BY_CATEGORY, GET_ITEMS_BY_SEARCH,
     GET_PRODUCT,
     ITEM_ERROR
 } from "../types";
@@ -33,18 +32,11 @@ export default (state, action) => {
                 categories: action.payload,
                 loading: false
             };
-        case FILTER_ITEMS:
+        case GET_ITEMS_BY_SEARCH:
             return {
                 ...state,
-                filtered: state.items.filter(item => {
-                    const regex = new RegExp(`${action.payload}`, 'gi');
-                    return item.name.match(regex) || item.category.match(regex);
-                })
-            };
-        case CLEAR_FILTER:
-            return {
-                ...state,
-                filtered: null
+                itemsBySearch: action.payload,
+                loading: false
             };
         case ITEM_ERROR:
             return {

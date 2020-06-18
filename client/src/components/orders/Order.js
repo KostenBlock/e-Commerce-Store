@@ -18,7 +18,7 @@ const Order = ({order}) => {
                             <td>
                                 <figure className="media">
                                     <div className="img-wrap"><img
-                                        src={pic.urlImg} alt={pic.name}
+                                        src={`../../../../productImages/${pic.img}`} alt={pic.name}
                                         className="img-thumbnail img-sm"/></div>
                                     <figcaption className="media-body">
                                         <h6 className="title">{pic.name} </h6>

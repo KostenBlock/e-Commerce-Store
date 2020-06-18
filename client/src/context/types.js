@@ -1,10 +1,9 @@
 //Товары
 export const GET_ITEMS = "GET_ITEMS";
 export const GET_ITEMS_BY_CATEGORY = "GET_ITEMS_BY_CATEGORY";
+export const GET_ITEMS_BY_SEARCH = "GET_ITEMS_BY_SEARCH";
 export const GET_PRODUCT = "GET_PRODUCT";
 export const ITEM_ERROR = "ITEM_ERROR";
-export const FILTER_ITEMS = "FILTER_ITEMS";
-export const CLEAR_FILTER = "CLEAR_FILTER";
 
 //Корзина
 export const GET_ITEMS_FROM_CART = "GET_ITEMS_FROM_CART";

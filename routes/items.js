@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const multer = require("multer");
+const cloudinary = require('cloudinary');
 const auth = require('../middleware/auth');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'productImages')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' +file.originalname )
-    }
+cloudinary.config({
+    cloud_name: "blockservices",
+    api_key: 965751971587379,
+    api_secret:"EpW5WYaHj-ReWRFAOuucatjBA1M"
 });
+
+const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -37,7 +37,13 @@ const Categories = require('../models/Categories');
 router.get('/', async (req, res) => {
     try{
         const items = await Item.find().sort({date: -1});
-        res.json(items);
+        const itemChunks = [];
+        const chunkSize = 3;
+        for (let i = 0; i < items.length; i += chunkSize) {
+            itemChunks.push(items.slice(i, i + chunkSize));
+        }
+        res.json(itemChunks);
+
     } catch (err) {
         console.error(err.msg);
         res.status(500).send('Server Error');
@@ -49,6 +55,19 @@ router.get('/', async (req, res) => {
 router.get('/category/:name', async (req, res) => {
     try{
         const items = await Item.find({category_eng: req.params.name}).sort({date: -1});
+        res.json(items);
+    } catch (err) {
+        console.error(err.msg);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/items/search/:query
+// @desc    Get items by search
+// Поиск public
+router.get('/search/:query', async (req,res) => {
+    try{
+        const items = await Item.find({name: new RegExp(req.params.query)}).sort({date: -1});
         res.json(items);
     } catch (err) {
         console.error(err.msg);
@@ -73,7 +92,10 @@ router.get('/product/:id', async (req, res) => {
 // @desc    Add new item
 // @access  Private
 router.post('/', auth, (req, res) => {
-    upload(req, res, async function (err) {
+    upload(req, res, function (err) {
+        if (err) {
+            return res.status(404).json({msg: "Размер изображения слишком больщой, максимальный размер 5мб."});
+        }
         const {name, category, category_eng, description, price} = req.body;
 
         if (!name || !category || !category_eng || !description || !price) {
@@ -82,22 +104,28 @@ router.post('/', auth, (req, res) => {
         if (!req.file) {
             return res.status(404).json({msg: "Изображение не выбрано"});
         }
-        try {
+        cloudinary.v2.uploader.upload(req.file.path).then(async function(data){
             const newItem = new Item({
-                name: name,
-                category: category,
-                category_eng: category_eng,
-                img: req.file.filename,
+                name: name.toLowerCase(),
+                category: category.toLowerCase(),
+                category_eng: category_eng.toLowerCase(),
+                img: data.url,
                 description: description,
                 price: price,
             });
-            const item = await newItem.save();
-            res.json(item);
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Ошибка сервера');
-        }
-    });
+            // сохраняем данные
+            await newItem.save((error)=>{
+                if(error){
+                    console.log('error',error)
+                }
+                else{
+                    res.json(newItem);
+                }
+            });
+        }).catch(function(error){
+            console.log(error);
+        });
+    })
 });
 
 // @route   PUT api/items/:id

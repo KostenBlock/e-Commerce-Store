@@ -37,7 +37,7 @@ export default (state, action) => {
                 ...state,
                 avatar: action.payload.imgName,
                 loading: false
-            }
+            };
         case CHANGE_AVATAR:
             return {
                 ...state,

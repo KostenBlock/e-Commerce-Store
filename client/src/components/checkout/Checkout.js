@@ -4,6 +4,7 @@ import AuthContext from "../../context/auth/authContext";
 import AlertContext from "../../context/alert/alertContext";
 import OrdersContext from "../../context/orders/ordersContext";
 import CartContext from "../../context/cart/cartContext";
+import {flb} from "../../utils/someFunctions";
 let valid = require('card-validator');
 
 const Checkout = ({history}) => {
@@ -21,10 +22,10 @@ const Checkout = ({history}) => {
     useEffect(() => {
         if (user !== null) {
             setData({
-                name: user.name,
-                surname: user.surname,
-                country: user.country,
-                city: user.city,
+                name: flb(user.name),
+                surname: flb(user.surname),
+                country: flb(user.country),
+                city: flb(user.city),
                 address: user.address,
                 zipcode: user.zipcode,
                 cardName: '',

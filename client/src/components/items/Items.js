@@ -1,39 +1,48 @@
-import React, {Fragment, useContext, useEffect} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import ItemsContext from "../../context/items/itemsContext";
 import Loader from "../layouts/Loader";
 import Item from "./Item";
+import Pagination from "./Pagination";
 
 const Items = () => {
     const itemsContext = useContext(ItemsContext);
 
-    const { getItems, items, loading, filtered} = itemsContext;
+    let { getItems, items, loading } = itemsContext;
 
-    useEffect(() =>{
+    useEffect(() => {
         getItems();
         // eslint-disable-next-line
-    }, [])
+    }, []);
 
-    if (items !== null && items.length === 0 && !loading) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(6);
+
+    if (items === null) { return <Loader/>}
+
+    if (items.length === 0 && !loading) {
         return <h4 className="text-center">Товаров нету...</h4>
     }
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+    const paginate = pageNumber => setCurrentPage(pageNumber);
+
     return (
         <Fragment>
-            {items !== null && !loading
-                ? (filtered !== null
-                    ?
-                    filtered.length !== 0
-                        ?
-                        filtered.map(item => (
-                            <Item key={item._id} item={item}/>
-                        ))
-                        : <h1 style={{margin: "auto", display: "block"}}>Совпадений нет...</h1>
-                    :
-                    items.map(item => (
+            <div className="row">
+            {!loading
+                ? (currentItems.map(item => (
                         <Item key={item._id} item={item}/>
                     )))
                 : <Loader/>
             }
+            </div>
+            <Pagination
+                itemsPerPage={itemsPerPage}
+                totalItems={items.length}
+                paginate={paginate}
+            />
         </Fragment>
     );
 };
